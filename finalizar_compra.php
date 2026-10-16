@@ -10,7 +10,7 @@
     <p>Obrigado por sua compra!</p>
     <p>Os produtos foram retirados do estoque.</p>
 
-    <a href="../controller/ProdutoController.php?acao=listar">
+    <a href="ProdutoController.php?acao=listar">
         Voltar para a loja
     </a>
 </body>
