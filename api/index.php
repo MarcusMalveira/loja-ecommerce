@@ -5,10 +5,10 @@ switch ($rota) {
     case '':
     case 'index.php':
     case 'ProdutoController.php':
-        require __DIR__ . '/../ProdutoController.php';
+        require __DIR__ . '/../controller/ProdutoController.php';
         break;
     case 'CarrinhoController.php':
-        require __DIR__ . '/../CarrinhoController.php';
+        require __DIR__ . '/../controller/CarrinhoController.php';
         break;
     default:
         http_response_code(404);

@@ -1,4 +1,4 @@
 <?php
 
-header('Location: ProdutoController.php?acao=listar');
+header('Location: /ProdutoController.php?acao=listar');
 exit;

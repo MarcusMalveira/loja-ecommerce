@@ -7,7 +7,7 @@
   "routes": [
     {
       "src": "/style.css",
-      "dest": "/style.css"
+      "dest": "/public/style.css"
     },
     {
       "src": "/.*",

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meu carrinho | TechLoja</title><link rel="stylesheet" href="style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meu carrinho | TechLoja</title><link rel="stylesheet" href="/style.css"></head>
 <body>
 <header class="topbar"><nav class="nav" aria-label="Navegação principal"><a class="brand" href="ProdutoController.php?acao=listar">Tech<span>Loja</span></a><div class="navlinks"><a href="ProdutoController.php?acao=listar">Início</a><a href="ProdutoController.php?acao=formulario">Cadastrar</a><a href="CarrinhoController.php?acao=ver" aria-current="page">🛒 Carrinho</a></div></nav></header>
 <main class="container inner-page">

@@ -27,6 +27,21 @@ Aplicação web **full stack** desenvolvida em PHP e MySQL, inicialmente como at
 | Versionamento | Git e GitHub |
 | Desenvolvimento e testes | XAMPP, MySQL Shell, Python e Selenium |
 
+## Estrutura de pastas
+
+```text
+api/          Roteador PHP da Vercel
+config/       Configuração do banco
+controller/   Controllers
+model/dao/    Acesso a dados
+model/dto/    DTOs
+view/         Interfaces PHP
+public/       Arquivos CSS e estáticos
+database/     Dumps SQL de referência
+index.php     Entrada local (XAMPP)
+vercel.json   Configuração Vercel
+```
+
 ## Como a aplicação funciona
 
 ```text
