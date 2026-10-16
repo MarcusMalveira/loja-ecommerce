@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../config/conexao.php';
-require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
-require_once __DIR__ . '/../model/dto/ProdutoDTO.php';
+require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/ProdutoDAO.php';
+require_once __DIR__ . '/ProdutoDTO.php';
 
 $produtoDAO = new ProdutoDAO($pdo);
 $acao = $_GET['acao'] ?? 'listar';
@@ -10,11 +10,11 @@ $acao = $_GET['acao'] ?? 'listar';
 switch ($acao) {
     case 'listar':
         $produtos = $produtoDAO->listarTodos();
-        require __DIR__ . '/../view/loja.php';
+        require __DIR__ . '/loja.php';
         break;
 
     case 'formulario':
-        require __DIR__ . '/../view/formularioProdutos.php';
+        require __DIR__ . '/formularioProdutos.php';
         break;
 
     case 'cadastrar':
@@ -45,7 +45,7 @@ switch ($acao) {
             die('Produto não encontrado');
         }
 
-        require __DIR__ . '/../view/editar.php';
+        require __DIR__ . '/editar.php';
         break;
 
     case 'atualizar':
