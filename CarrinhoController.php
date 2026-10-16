@@ -2,9 +2,9 @@
 
 session_start();
 
-require_once __DIR__ . '/../config/conexao.php';
-require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
-require_once __DIR__ . '/../model/dto/ProdutoDTO.php';
+require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/ProdutoDAO.php';
+require_once __DIR__ . '/ProdutoDTO.php';
 
 $produtoDAO = new ProdutoDAO($pdo);
 
@@ -18,7 +18,7 @@ switch ($acao) {
     case 'ver':
         $carrinho = $_SESSION['carrinho'];
         $total = 0;
-        require __DIR__ . '/../view/carrinho.php';
+        require __DIR__ . '/carrinho.php';
         break;
 
     case 'adicionar':
@@ -117,7 +117,7 @@ switch ($acao) {
         try {
             $produtoDAO->finalizarCompra($_SESSION['carrinho']);
             $_SESSION['carrinho'] = [];
-            require __DIR__ . '/../view/finalizar_compra.php';
+            require __DIR__ . '/finalizar_compra.php';
         } catch (Exception $e) {
             die("Erro ao finalizar a compra: " . $e->getMessage());
         }
