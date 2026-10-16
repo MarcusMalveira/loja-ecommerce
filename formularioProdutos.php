@@ -8,7 +8,7 @@
 <body>
     <h1>Cadastrar Produto</h1>
 
-    <form action="../controller/ProdutoController.php?acao=cadastrar" method="POST">
+    <form action="ProdutoController.php?acao=cadastrar" method="POST">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required>
 
@@ -25,6 +25,6 @@
     </form>
 
     <br>
-    <a href="../controller/ProdutoController.php?acao=listar">Voltar para a Loja</a>
+    <a href="ProdutoController.php?acao=listar">Voltar para a Loja</a>
 </body>
 </html>
