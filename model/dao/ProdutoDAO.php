@@ -24,7 +24,8 @@ class ProdutoDAO
             $produto->setId($linha['id']);
             $produto->setNome($linha['nome']);
             $produto->setValor($linha['valor']);
-            $produto->setQuantidade($linha['quantidade']);
+            $produto->setQuantidade($linha['quantidade']);
+
             $produtos[] = $produto;
         }
 
@@ -46,7 +47,8 @@ class ProdutoDAO
         $produto->setId($linha['id']);
         $produto->setNome($linha['nome']);
         $produto->setValor($linha['valor']);
-        $produto->setQuantidade($linha['quantidade']);
+        $produto->setQuantidade($linha['quantidade']);
+
         return $produto;
     }
 
@@ -81,7 +83,8 @@ class ProdutoDAO
             $stmt->execute([
                 $produto->getNome(),
                 $produto->getValor(),
-                $produto->getQuantidade(),            ]);
+                $produto->getQuantidade(),
+            ]);
         }
     }
 
@@ -95,7 +98,8 @@ class ProdutoDAO
         $stmt->execute([
             $produto->getNome(),
             $produto->getValor(),
-            $produto->getQuantidade(),            $produto->getId()
+            $produto->getQuantidade(),
+            $produto->getId()
         ]);
     }
 
