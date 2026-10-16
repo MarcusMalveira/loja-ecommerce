@@ -18,10 +18,10 @@ if ($caBase64 !== false && $caBase64 !== '') {
         http_response_code(503);
         exit('Não foi possível configurar o certificado SSL.');
     }
-    $opcoes[PDO::MYSQL_ATTR_SSL_CA] = $caminhoCA;
-    $opcoes[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+    $opcoes[Pdo\\Mysql::ATTR_SSL_CA] = $caminhoCA;
+    $opcoes[Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = true;
 }
-if ($host !== 'localhost' && empty($opcoes[PDO::MYSQL_ATTR_SSL_CA])) {
+if ($host !== 'localhost' && empty($opcoes[Pdo\\Mysql::ATTR_SSL_CA])) {
     http_response_code(503);
     exit('Configure DB_SSL_CA_BASE64 para conectar ao banco remoto com TLS verificado.');
 }
@@ -33,7 +33,7 @@ try {
         $opcoes
     );
 } catch (PDOException $e) {
-    error_log('Falha de conexão ao banco: '.$e->getMessage());
+    error_log('TechLoja MySQL PDO connection failure: '.$e->getMessage());
     http_response_code(503);
     exit('Banco de dados indisponível. Confira a configuração do ambiente.');
 }
