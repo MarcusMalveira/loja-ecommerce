@@ -5,7 +5,8 @@ class ProdutoDTO
     private $id;
     private $nome;
     private $valor;
-    private $quantidade;
+    private $quantidade;
+
     public function getId()
     {
         return $this->id;
