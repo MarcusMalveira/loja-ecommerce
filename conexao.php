@@ -18,10 +18,10 @@ if ($caBase64 !== false && $caBase64 !== '') {
         http_response_code(503);
         exit('Não foi possível configurar o certificado SSL.');
     }
-    $opcoes[Pdo\\Mysql::ATTR_SSL_CA] = $caminhoCA;
-    $opcoes[Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = true;
+    $opcoes[Pdo\Mysql::ATTR_SSL_CA] = $caminhoCA;
+    $opcoes[Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = true;
 }
-if ($host !== 'localhost' && empty($opcoes[Pdo\\Mysql::ATTR_SSL_CA])) {
+if ($host !== 'localhost' && empty($opcoes[Pdo\Mysql::ATTR_SSL_CA])) {
     http_response_code(503);
     exit('Configure DB_SSL_CA_BASE64 para conectar ao banco remoto com TLS verificado.');
 }
