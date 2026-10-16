@@ -11,7 +11,7 @@
     <?php if (empty($carrinho)): ?>
         <p>O carrinho está vazio.</p>
         <a
-            href="../controller/ProdutoController.php?acao=listar"
+            href="ProdutoController.php?acao=listar"
             id="voltar_loja"
         >
             Voltar para a loja
@@ -36,7 +36,7 @@
 
                 <form
                     method="POST"
-                    action="../controller/CarrinhoController.php?acao=alterar"
+                    action="CarrinhoController.php?acao=alterar"
                 >
                     <input type="hidden" name="id" value="<?= $produto['id'] ?>">
                     <input type="hidden" name="operacao" value="definir">
@@ -60,7 +60,7 @@
                 <div style="display: flex; gap: 5px;">
                     <form
                         method="POST"
-                        action="../controller/CarrinhoController.php?acao=alterar"
+                        action="CarrinhoController.php?acao=alterar"
                     >
                         <input type="hidden" name="id" value="<?= $produto['id'] ?>">
                         <input type="hidden" name="operacao" value="diminuir">
@@ -69,7 +69,7 @@
 
                     <form
                         method="POST"
-                        action="../controller/CarrinhoController.php?acao=alterar"
+                        action="CarrinhoController.php?acao=alterar"
                     >
                         <input type="hidden" name="id" value="<?= $produto['id'] ?>">
                         <input type="hidden" name="operacao" value="aumentar">
@@ -81,18 +81,18 @@
 
         <h2>Total: R$<?= number_format($total, 2, ',', '.') ?></h2>
 
-        <form method="POST" action="../controller/CarrinhoController.php?acao=limpar">
+        <form method="POST" action="CarrinhoController.php?acao=limpar">
             <button type="submit" id="limpar_carrinho">Limpar Carrinho</button>
         </form>
 
-        <form method="POST" action="../controller/CarrinhoController.php?acao=finalizar">
+        <form method="POST" action="CarrinhoController.php?acao=finalizar">
             <button type="submit" id="finalizar_compra">Finalizar Compra</button>
         </form>
 
         <br><br>
 
         <a
-            href="../controller/ProdutoController.php?acao=listar"
+            href="ProdutoController.php?acao=listar"
             id="continuar_comprando"
         >
             Continuar comprando
