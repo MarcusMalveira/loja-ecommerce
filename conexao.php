@@ -1,18 +1,18 @@
 <?php
-
-$host = "localhost";
-$banco = "produtos";
-$usuario = "root";
-$senha = "";
-
+$host = getenv('DB_HOST') ?: 'localhost';
+$banco = getenv('DB_NAME') ?: 'produtos';
+$usuario = getenv('DB_USER') ?: 'root';
+$senha = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : '';
+$porta = getenv('DB_PORT') ?: '3306';
 try {
     $pdo = new PDO(
-        "mysql:host=$host;dbname=$banco;charset=utf8",
+        "mysql:host=$host;port=$porta;dbname=$banco;charset=utf8mb4",
         $usuario,
-        $senha
+        $senha,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
-
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Erro na conexão: " . $e->getMessage());
+    error_log('Falha de conexão ao banco: '.$e->getMessage());
+    http_response_code(503);
+    exit('Banco de dados indisponível. Confira a configuração do ambiente.');
 }
