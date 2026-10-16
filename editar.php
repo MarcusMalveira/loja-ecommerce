@@ -8,7 +8,7 @@
 <body>
     <h1>Editar Produto</h1>
 
-    <form method="POST" action="../controller/ProdutoController.php?acao=atualizar">
+    <form method="POST" action="ProdutoController.php?acao=atualizar">
         <input type="hidden" name="id" value="<?= $produto->getId() ?>">
 
         <label for="nome">Nome:</label>
@@ -55,7 +55,7 @@
         <input type="submit" value="Atualizar" id="atualizar">
     </form>
 
-    <a href="../controller/ProdutoController.php?acao=listar">
+    <a href="ProdutoController.php?acao=listar">
         Voltar para a Loja
     </a>
 </body>
