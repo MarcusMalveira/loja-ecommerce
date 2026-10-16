@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../config/conexao.php';
-require_once __DIR__ . '/../dto/ProdutoDTO.php';
+require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/ProdutoDTO.php';
 
 class ProdutoDAO
 {
