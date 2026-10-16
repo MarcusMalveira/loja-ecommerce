@@ -24,9 +24,7 @@ class ProdutoDAO
             $produto->setId($linha['id']);
             $produto->setNome($linha['nome']);
             $produto->setValor($linha['valor']);
-            $produto->setQuantidade($linha['quantidade']);
-            $produto->setValidade($linha['validade']);
-
+            $produto->setQuantidade($linha['quantidade']);
             $produtos[] = $produto;
         }
 
@@ -48,9 +46,7 @@ class ProdutoDAO
         $produto->setId($linha['id']);
         $produto->setNome($linha['nome']);
         $produto->setValor($linha['valor']);
-        $produto->setQuantidade($linha['quantidade']);
-        $produto->setValidade($linha['validade']);
-
+        $produto->setQuantidade($linha['quantidade']);
         return $produto;
     }
 
@@ -58,12 +54,9 @@ class ProdutoDAO
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM produto
-            WHERE nome = ? AND validade = ?
+            WHERE nome = ?
         ");
-        $stmt->execute([
-            $produto->getNome(),
-            $produto->getValidade()
-        ]);
+        $stmt->execute([$produto->getNome()]);
 
         $produtoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -82,15 +75,13 @@ class ProdutoDAO
             ]);
         } else {
             $stmt = $this->pdo->prepare("
-                INSERT INTO produto (nome, valor, quantidade, validade)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO produto (nome, valor, quantidade)
+                VALUES (?, ?, ?)
             ");
             $stmt->execute([
                 $produto->getNome(),
                 $produto->getValor(),
-                $produto->getQuantidade(),
-                $produto->getValidade()
-            ]);
+                $produto->getQuantidade(),            ]);
         }
     }
 
@@ -98,15 +89,13 @@ class ProdutoDAO
     {
         $stmt = $this->pdo->prepare("
             UPDATE produto
-            SET nome = ?, valor = ?, quantidade = ?, validade = ?
+            SET nome = ?, valor = ?, quantidade = ?
             WHERE id = ?
         ");
         $stmt->execute([
             $produto->getNome(),
             $produto->getValor(),
-            $produto->getQuantidade(),
-            $produto->getValidade(),
-            $produto->getId()
+            $produto->getQuantidade(),            $produto->getId()
         ]);
     }
 

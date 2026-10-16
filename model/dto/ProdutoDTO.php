@@ -5,9 +5,7 @@ class ProdutoDTO
     private $id;
     private $nome;
     private $valor;
-    private $quantidade;
-    private $validade;
-
+    private $quantidade;
     public function getId()
     {
         return $this->id;
@@ -46,15 +44,5 @@ class ProdutoDTO
     public function setQuantidade($quantidade)
     {
         $this->quantidade = $quantidade;
-    }
-
-    public function getValidade()
-    {
-        return $this->validade;
-    }
-
-    public function setValidade($validade)
-    {
-        $this->validade = $validade;
     }
 }

@@ -27,7 +27,6 @@ switch ($acao) {
         $produto->setNome($_POST['nome']);
         $produto->setValor($_POST['valor']);
         $produto->setQuantidade($_POST['quantidade']);
-        $produto->setValidade($_POST['validade']);
 
         $produtoDAO->cadastrarOuSomar($produto);
 
@@ -58,7 +57,6 @@ switch ($acao) {
         $produto->setNome($_POST['nome']);
         $produto->setValor($_POST['valor']);
         $produto->setQuantidade($_POST['quantidade']);
-        $produto->setValidade($_POST['validade']);
 
         $produtoDAO->atualizar($produto);
 

@@ -32,15 +32,6 @@
         >
         <br>
 
-        <label for="validade">Validade:</label>
-        <input
-            type="date"
-            id="validade"
-            name="validade"
-            value="<?= htmlspecialchars($produto->getValidade()) ?>"
-            required
-        >
-        <br>
 
         <label for="quantidade">Quantidade:</label>
         <input

@@ -9,6 +9,5 @@
 <form class="product-form" action="ProdutoController.php?acao=cadastrar" method="POST">
 <div class="field"><label for="nome">Nome do produto</label><input id="nome" name="nome" type="text" maxlength="255" placeholder="Ex.: Teclado mecânico RGB" required></div>
 <div class="form-grid"><div class="field"><label for="valor">Preço (R$)</label><input id="valor" name="valor" type="number" min="0" step="0.01" placeholder="0,00" required></div><div class="field"><label for="quantidade">Quantidade em estoque</label><input id="quantidade" name="quantidade" type="number" min="1" step="1" placeholder="Ex.: 10" required></div></div>
-<div class="field"><label for="validade">Data de validade</label><input id="validade" name="validade" type="date" required><span class="field-hint">Campo mantido para compatibilidade com o banco atual.</span></div>
 <div class="form-actions"><a class="outline-btn" href="ProdutoController.php?acao=listar">Cancelar</a><button class="full-btn" type="submit" id="cadastrar">＋ Cadastrar produto</button></div>
 </form></div></main></body></html>
