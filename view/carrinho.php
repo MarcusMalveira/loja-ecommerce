@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meu carrinho | TechLoja</title><link rel="stylesheet" href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/') ? '../public/style.css' : '/style.css' ?>"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meu carrinho | TechLoja</title><link rel="stylesheet" href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/') ? '../public/style.css' : '/style.css' ?>">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z4V0PZP15H"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Z4V0PZP15H');
+</script>
+</head>
 <body>
 <header class="topbar"><nav class="nav" aria-label="Navegação principal"><a class="brand" href="ProdutoController.php?acao=listar">Tech<span>Loja</span></a><div class="navlinks"><a href="ProdutoController.php?acao=listar">Início</a><a href="ProdutoController.php?acao=formulario">Cadastrar</a><a href="CarrinhoController.php?acao=ver" aria-current="page">🛒 Carrinho</a></div></nav></header>
 <main class="container inner-page">
@@ -30,4 +39,34 @@
 <form method="POST" action="CarrinhoController.php?acao=finalizar"><button class="full-btn" id="finalizar_compra" type="submit">Finalizar compra →</button></form>
 <form method="POST" action="CarrinhoController.php?acao=limpar"><button class="text-danger-btn" id="limpar_carrinho" type="submit">Limpar carrinho</button></form>
 </aside></div>
-<?php endif; ?></main></body></html>
+<?php endif; ?></main>
+<?php
+$ga4ItensCarrinho = array_map(static function ($item) {
+    return [
+        'item_id' => (string) $item['id'],
+        'item_name' => $item['nome'],
+        'price' => (float) $item['valor'],
+        'quantity' => (int) $item['quantidade']
+    ];
+}, array_values($carrinho));
+$ga4TotalCarrinho = array_reduce($carrinho, static function ($total, $item) {
+    return $total + (float) $item['valor'] * (int) $item['quantidade'];
+}, 0.0);
+$ga4JsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+?>
+<script>
+<?php if (is_array($ga4Adicionado)): ?>
+gtag('event', 'add_to_cart', <?= json_encode($ga4Adicionado, $ga4JsonFlags) ?>);
+<?php endif; ?>
+<?php if (!empty($ga4ItensCarrinho)): ?>
+const ecommerceCart = <?= json_encode(['currency' => 'BRL', 'value' => round($ga4TotalCarrinho, 2), 'items' => $ga4ItensCarrinho], $ga4JsonFlags) ?>;
+gtag('event', 'view_cart', ecommerceCart);
+const checkoutForm = document.querySelector('form[action*="acao=finalizar"]');
+if (checkoutForm) {
+  checkoutForm.addEventListener('submit', function () {
+    gtag('event', 'begin_checkout', ecommerceCart);
+  });
+}
+<?php endif; ?>
+</script>
+</body></html>
