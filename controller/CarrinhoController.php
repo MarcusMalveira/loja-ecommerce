@@ -18,6 +18,8 @@ switch ($acao) {
     case 'ver':
         $carrinho = $_SESSION['carrinho'];
         $total = 0;
+        $ga4Adicionado = $_SESSION['ga4_add_to_cart'] ?? null;
+        unset($_SESSION['ga4_add_to_cart']);
         require __DIR__ . '/../view/carrinho.php';
         break;
 
@@ -61,6 +63,18 @@ switch ($acao) {
                     'quantidade' => $quantidade
                 ];
             }
+
+            // Evento pendente: somente após a inclusão ser validada no servidor.
+            $_SESSION['ga4_add_to_cart'] = [
+                'currency' => 'BRL',
+                'value' => round((float) $produto->getValor() * $quantidade, 2),
+                'items' => [[
+                    'item_id' => (string) $produto->getId(),
+                    'item_name' => $produto->getNome(),
+                    'price' => (float) $produto->getValor(),
+                    'quantity' => $quantidade
+                ]]
+            ];
         }
 
         header('Location: CarrinhoController.php?acao=ver');
@@ -115,7 +129,23 @@ switch ($acao) {
         }
 
         try {
-            $produtoDAO->finalizarCompra($_SESSION['carrinho']);
+            $itensCompra = array_values($_SESSION['carrinho']);
+            $produtoDAO->finalizarCompra($itensCompra);
+            $ga4Compra = [
+                'transaction_id' => 'DEMO-' . bin2hex(random_bytes(8)),
+                'currency' => 'BRL',
+                'value' => round(array_reduce($itensCompra, static function ($total, $item) {
+                    return $total + (float) $item['valor'] * (int) $item['quantidade'];
+                }, 0.0), 2),
+                'items' => array_map(static function ($item) {
+                    return [
+                        'item_id' => (string) $item['id'],
+                        'item_name' => $item['nome'],
+                        'price' => (float) $item['valor'],
+                        'quantity' => (int) $item['quantidade']
+                    ];
+                }, $itensCompra)
+            ];
             $_SESSION['carrinho'] = [];
             require __DIR__ . '/../view/finalizar_compra.php';
         } catch (Exception $e) {
