@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra Finalizada</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z4V0PZP15H"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Z4V0PZP15H');
+</script>
 </head>
 <body>
     <h1>Compra realizada com sucesso!</h1>
@@ -13,5 +22,9 @@
     <a href="ProdutoController.php?acao=listar">
         Voltar para a loja
     </a>
+<script>
+// Evento de compra apenas na página retornada após finalização bem-sucedida.
+gtag('event', 'purchase', <?= json_encode($ga4Compra, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+</script>
 </body>
 </html>
