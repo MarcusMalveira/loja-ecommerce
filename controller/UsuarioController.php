@@ -5,10 +5,14 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+require_once __DIR__ . '/../model/dao/CarrinhoDAO.php';
+require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
 require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/../model/dao/UsuarioDAO.php';
 
 $usuarioDAO = new UsuarioDAO($pdo);
+$carrinhoDAO = new CarrinhoDAO($pdo);
+$produtoDAO = new ProdutoDAO($pdo);
 $acao = $_GET['acao'] ?? 'formulario';
 
 // Token de proteção dos formulários
@@ -106,17 +110,104 @@ switch ($acao) {
             http_response_code(401);
             exit('E-mail ou senha incorretos.');
         }
+        // Preserva os produtos adicionados antes do login.
+                $carrinhoVisitante = $_SESSION['carrinho'] ?? [];
+                $usuarioId = (int) $usuario['id'];
 
-        session_regenerate_id(true);
+                try {
+                    $pdo->beginTransaction();
 
-        $_SESSION['usuario'] = [
-            'id' => (int) $usuario['id'],
-            'nome' => $usuario['nome'],
-            'tipo' => $usuario['tipo']
-        ];
+                    // Busca os produtos que já estavam salvos na conta.
+                    $itensSalvos = $carrinhoDAO->buscarPorUsuario($usuarioId);
 
-        header('Location: ProdutoController.php?acao=listar');
-        exit;
+                    $quantidades = [];
+
+                    // Primeiro, carrega as quantidades do banco.
+                    foreach ($itensSalvos as $item) {
+                        $produtoId = (int) $item['id'];
+
+                        $quantidades[$produtoId] =
+                            (int) $item['quantidade'];
+                    }
+
+                    // Depois, combina com os produtos do visitante.
+                    foreach ($carrinhoVisitante as $item) {
+                        $produtoId = (int) ($item['id'] ?? 0);
+                        $quantidade = (int) ($item['quantidade'] ?? 0);
+
+                        if ($produtoId <= 0 || $quantidade <= 0) {
+                            continue;
+                        }
+
+                        $quantidades[$produtoId] =
+                            ($quantidades[$produtoId] ?? 0) + $quantidade;
+                    }
+
+                    $carrinhoAtualizado = [];
+
+                    foreach ($quantidades as $produtoId => $quantidade) {
+                        $produto = $produtoDAO->buscarPorId($produtoId);
+
+                        // Remove itens indisponíveis.
+                        if (!$produto || $produto->getQuantidade() <= 0) {
+                            $carrinhoDAO->removerItem(
+                                $usuarioId,
+                                $produtoId
+                            );
+
+                            continue;
+                        }
+
+                        // Não permite quantidade maior que o estoque.
+                        $quantidadeFinal = min(
+                            $quantidade,
+                            (int) $produto->getQuantidade()
+                        );
+
+                        // Atualiza o carrinho no MySQL.
+                        $carrinhoDAO->salvarItem(
+                            $usuarioId,
+                            $produtoId,
+                            $quantidadeFinal
+                        );
+
+                        // Monta o carrinho utilizado pela sessão.
+                        $carrinhoAtualizado[] = [
+                            'id' => $produtoId,
+                            'nome' => $produto->getNome(),
+                            'valor' => $produto->getValor(),
+                            'quantidade' => $quantidadeFinal
+                        ];
+                    }
+
+                    $pdo->commit();
+
+                } catch (Throwable $e) {
+                    if ($pdo->inTransaction()) {
+                        $pdo->rollBack();
+                    }
+
+                    error_log($e->getMessage());
+
+                    http_response_code(500);
+                    exit('Erro ao recuperar o carrinho.');
+                }
+
+                // Renova a sessão após autenticação.
+                session_regenerate_id(true);
+
+                $_SESSION['usuario'] = [
+                    'id' => $usuarioId,
+                    'nome' => $usuario['nome'],
+                    'tipo' => $usuario['tipo']
+                ];
+
+                // Restaura o carrinho vinculado à conta.
+                $_SESSION['carrinho'] = $carrinhoAtualizado;
+
+                header('Location: ProdutoController.php?acao=listar');
+                exit;
+
 
     case 'sair':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
