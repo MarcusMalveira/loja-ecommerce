@@ -341,35 +341,51 @@
                         Compra simulada para fins acadêmicos.
                         Nenhum pagamento será cobrado.
                     </p>
+                    
+                      <!-- FINALIZAÇÃO COM AUTENTICAÇÃO -->
+                      <?php if (isset($_SESSION['usuario'])): ?>
 
+                          <form method="POST"
+                                action="CarrinhoController.php?acao=finalizar">
 
-                    <!-- FINALIZAÇÃO COM AUTENTICAÇÃO -->
-                    <?php if (isset($_SESSION['usuario'])): ?>
+                              <!-- PROTEÇÃO CSRF -->
+                              <input type="hidden"
+                                    name="csrf_token"
+                                    value="<?= htmlspecialchars(
+                                        $_SESSION['csrf_token'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>">
 
-                        <form method="POST"
-                              action="CarrinhoController.php?acao=finalizar">
+                              <button class="full-btn"
+                                      id="finalizar_compra"
+                                      type="submit">
+                                  Finalizar compra →
+                              </button>
 
-                            <button class="full-btn"
-                                    id="finalizar_compra"
-                                    type="submit">
-                                Finalizar compra →
-                            </button>
+                          </form>
 
-                        </form>
+                      <?php else: ?>
 
-                    <?php else: ?>
+                          <a class="full-btn"
+                            href="UsuarioController.php?acao=formLogin">
+                              Entrar para finalizar →
+                          </a>
 
-                        <a class="full-btn"
-                           href="UsuarioController.php?acao=formLogin">
-                            Entrar para finalizar →
-                        </a>
-
-                    <?php endif; ?>
-
+                      <?php endif; ?>
 
                     <!-- LIMPAR CARRINHO -->
                     <form method="POST"
                           action="CarrinhoController.php?acao=limpar">
+
+                        <!-- PROTEÇÃO CSRF -->
+                        <input type="hidden"
+                              name="csrf_token"
+                              value="<?= htmlspecialchars(
+                                  $_SESSION['csrf_token'],
+                                  ENT_QUOTES,
+                                  'UTF-8'
+                              ) ?>">
 
                         <button class="text-danger-btn"
                                 id="limpar_carrinho"
@@ -378,6 +394,7 @@
                         </button>
 
                     </form>
+
 
                 </aside>
 
