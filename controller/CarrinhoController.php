@@ -2,6 +2,32 @@
 
 session_start();
 
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+function validarRequisicaoPost(): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        exit('Método não permitido.');
+    }
+
+    $tokenEnviado = $_POST['csrf_token'] ?? '';
+    $tokenSessao = $_SESSION['csrf_token'] ?? '';
+
+    if (
+        !is_string($tokenEnviado) ||
+        !is_string($tokenSessao) ||
+        !hash_equals($tokenSessao, $tokenEnviado)
+    ) {
+        http_response_code(403);
+        exit('Token CSRF inválido.');
+    }
+}
+
+
 require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
 require_once __DIR__ . '/../model/dto/ProdutoDTO.php';
@@ -24,6 +50,8 @@ switch ($acao) {
         break;
 
     case 'adicionar':
+        validarRequisicaoPost();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $produtoId = (int) $_POST['produto_id'];
             $quantidade = (int) $_POST['quantidade'];
@@ -81,6 +109,8 @@ switch ($acao) {
         exit;
 
     case 'alterar':
+        validarRequisicaoPost();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = (int) $_POST['id'];
             $operacao = $_POST['operacao'];
@@ -119,15 +149,21 @@ switch ($acao) {
         exit;
 
     case 'limpar':
+        validarRequisicaoPost();
+
         $_SESSION['carrinho'] = [];
+
         header('Location: CarrinhoController.php?acao=ver');
         exit;
 
-    case 'finalizar':        
+    case 'finalizar':
+         validarRequisicaoPost();
+
         if (!isset($_SESSION['usuario'])) {
             header('Location: UsuarioController.php?acao=formLogin');
             exit;
-        }
+         }
+
         if (empty($_SESSION['carrinho'])) {
             die("O carrinho está vazio.");
         }
