@@ -204,32 +204,43 @@
                                     Quantidade
                                 </label>
 
-                                <!-- DEFINIR QUANTIDADE -->
-                                <form class="qty-edit"
-                                      method="POST"
-                                      action="CarrinhoController.php?acao=alterar">
+                                
+                              <!-- DEFINIR QUANTIDADE -->
+                              <form class="qty-edit"
+                                    method="POST"
+                                    action="CarrinhoController.php?acao=alterar">
 
-                                    <input type="hidden"
-                                           name="id"
-                                           value="<?= $produtoId ?>">
+                                  <input type="hidden"
+                                        name="id"
+                                        value="<?= $produtoId ?>">
 
-                                    <input type="hidden"
-                                           name="operacao"
-                                           value="definir">
+                                  <input type="hidden"
+                                        name="operacao"
+                                        value="definir">
 
-                                    <input type="number"
-                                           id="quantidade_carrinho_<?= $produtoId ?>"
-                                           name="quantidade"
-                                           min="1"
-                                           value="<?= (int) $produto['quantidade'] ?>"
-                                           required>
+                                  <!-- PROTEÇÃO CSRF -->
+                                  <input type="hidden"
+                                        name="csrf_token"
+                                        value="<?= htmlspecialchars(
+                                            $_SESSION['csrf_token'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>">
 
-                                    <button type="submit"
-                                            id="atualizar_quantidade_<?= $produtoId ?>">
-                                        Atualizar
-                                    </button>
+                                  <input type="number"
+                                        id="quantidade_carrinho_<?= $produtoId ?>"
+                                        name="quantidade"
+                                        min="1"
+                                        value="<?= (int) $produto['quantidade'] ?>"
+                                        required>
 
-                                </form>
+                                  <button type="submit"
+                                          id="atualizar_quantidade_<?= $produtoId ?>">
+                                      Atualizar
+                                  </button>
+
+                              </form>
+
 
 
                                 <!-- AUMENTAR / DIMINUIR -->
