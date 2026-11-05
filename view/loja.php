@@ -250,7 +250,16 @@ $ehAdmin = ($usuario['tipo'] ?? null) === 'admin';
                         <form
                             class="buy"
                             method="POST"
-                            action="CarrinhoController.php?acao=adicionar">
+                            action="CarrinhoController.php?acao=adicionar">                            
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="<?= htmlspecialchars(
+                                    $_SESSION['csrf_token'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>"
+                            >
                             <input
                                 type="hidden"
                                 name="produto_id"
