@@ -1,11 +1,39 @@
 <?php
 
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+
 require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
 require_once __DIR__ . '/../model/dto/ProdutoDTO.php';
 
 $produtoDAO = new ProdutoDAO($pdo);
 $acao = $_GET['acao'] ?? 'listar';
+
+
+// Operações exclusivas de administradores
+$acoesAdmin = [
+    'formulario',
+    'cadastrar',
+    'editar',
+    'atualizar',
+    'excluir'
+];
+
+if (in_array($acao, $acoesAdmin, true)) {
+    if (($_SESSION['usuario']['tipo'] ?? null) !== 'admin') {
+        http_response_code(403);
+        exit('Acesso negado. Área exclusiva do administrador.');
+    }
+}
+
 
 switch ($acao) {
     case 'listar':

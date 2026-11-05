@@ -28,7 +28,62 @@ if ($busca !== '') {
 <input type="hidden" name="acao" value="listar">
 <input type="search" name="busca" placeholder="O que você está procurando?" aria-label="Pesquisar produtos" value="<?= htmlspecialchars($busca, ENT_QUOTES, 'UTF-8') ?>">
 <button type="submit">Buscar</button></form>
-<div class="navlinks"><a href="ProdutoController.php?acao=listar">Início</a><a href="ProdutoController.php?acao=formulario">Cadastrar</a><a href="CarrinhoController.php?acao=ver">🛒 Carrinho</a></div>
+<div class="navlinks">
+<div class="navlinks">
+
+    <a href="ProdutoController.php?acao=listar">
+        Início
+    </a>
+
+    <a href="CarrinhoController.php?acao=ver">
+        🛒 Carrinho
+    </a>
+
+    <?php if (isset($_SESSION['usuario'])): ?>
+
+        <?php if ($_SESSION['usuario']['tipo'] === 'admin'): ?>
+            <a href="ProdutoController.php?acao=formulario">
+                Gerenciar produtos
+            </a>
+        <?php endif; ?>
+
+        <span>
+            Olá,
+            <?= htmlspecialchars(
+                $_SESSION['usuario']['nome'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>!
+        </span>
+
+        <form method="POST"
+              action="UsuarioController.php?acao=sair">
+
+            <input type="hidden"
+                   name="csrf_token"
+                   value="<?= htmlspecialchars(
+                       $_SESSION['csrf_token'],
+                       ENT_QUOTES,
+                       'UTF-8'
+                   ) ?>">
+
+            <button type="submit">Sair</button>
+        </form>
+
+    <?php else: ?>
+
+        <a href="UsuarioController.php?acao=formLogin">
+            Entrar
+        </a>
+
+        <a href="UsuarioController.php?acao=formulario">
+            Criar conta
+        </a>
+
+    <?php endif; ?>
+
+</div>
+</div>
 </nav></header>
 <main class="container">
 <section class="hero"><span class="eyebrow">Tecnologia para o seu dia a dia</span><h1>Seu próximo upgrade começa aqui.</h1><p>Explore produtos, encontre o que procura e monte seu carrinho. Projeto demonstrativo de e-commerce.</p></section>
