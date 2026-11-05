@@ -1,15 +1,34 @@
+
 <?php
-// Ponto de entrada para a Vercel. No XAMPP, index.php continua funcionando normalmente.
-$rota = basename(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
+
+// Roteador da aplicação na Vercel
+
+$rota = basename(
+    parse_url(
+        $_SERVER['REQUEST_URI'] ?? '/',
+        PHP_URL_PATH
+    ) ?: '/'
+);
+
 switch ($rota) {
+
     case '':
     case 'index.php':
     case 'ProdutoController.php':
-        require __DIR__ . '/../controller/ProdutoController.php';
+        require __DIR__ .
+            '/../controller/ProdutoController.php';
         break;
+
     case 'CarrinhoController.php':
-        require __DIR__ . '/../controller/CarrinhoController.php';
+        require __DIR__ .
+            '/../controller/CarrinhoController.php';
         break;
+
+    case 'UsuarioController.php':
+        require __DIR__ .
+            '/../controller/UsuarioController.php';
+        break;
+
     default:
         http_response_code(404);
         echo 'Página não encontrada.';
