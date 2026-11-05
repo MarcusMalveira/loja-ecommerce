@@ -236,42 +236,58 @@
                                 <div class="qty-step">
 
                                     <form method="POST"
-                                          action="CarrinhoController.php?acao=alterar">
+      action="CarrinhoController.php?acao=alterar">
 
-                                        <input type="hidden"
-                                               name="id"
-                                               value="<?= $produtoId ?>">
+                                <input type="hidden"
+                                      name="id"
+                                      value="<?= $produtoId ?>">
 
-                                        <input type="hidden"
-                                               name="operacao"
-                                               value="diminuir">
+                                <input type="hidden"
+                                      name="operacao"
+                                      value="aumentar">
 
-                                        <button type="submit"
-                                                id="diminuir"
-                                                aria-label="Diminuir quantidade">
-                                            −
-                                        </button>
+                                <input type="hidden"
+                                      name="csrf_token"
+                                      value="<?= htmlspecialchars(
+                                          $_SESSION['csrf_token'],
+                                          ENT_QUOTES,
+                                          'UTF-8'
+                                      ) ?>">
 
-                                    </form>
+                                <button type="submit"
+                                        id="aumentar"
+                                        aria-label="Aumentar quantidade">
+                                    +
+                                </button>
+
+                            </form>
 
                                     <form method="POST"
-                                          action="CarrinhoController.php?acao=alterar">
+      action="CarrinhoController.php?acao=alterar">
 
-                                        <input type="hidden"
-                                               name="id"
-                                               value="<?= $produtoId ?>">
+                                  <input type="hidden"
+                                        name="id"
+                                        value="<?= $produtoId ?>">
 
-                                        <input type="hidden"
-                                               name="operacao"
-                                               value="aumentar">
+                                  <input type="hidden"
+                                        name="operacao"
+                                        value="diminuir">
 
-                                        <button type="submit"
-                                                id="aumentar"
-                                                aria-label="Aumentar quantidade">
-                                            +
-                                        </button>
+                                  <input type="hidden"
+                                        name="csrf_token"
+                                        value="<?= htmlspecialchars(
+                                            $_SESSION['csrf_token'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>">
 
-                                    </form>
+                                  <button type="submit"
+                                          id="diminuir"
+                                          aria-label="Diminuir quantidade">
+                                      −
+                                  </button>
+
+                              </form>
 
                                 </div>
 
