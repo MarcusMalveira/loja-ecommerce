@@ -123,7 +123,11 @@ switch ($acao) {
         header('Location: CarrinhoController.php?acao=ver');
         exit;
 
-    case 'finalizar':
+    case 'finalizar':        
+        if (!isset($_SESSION['usuario'])) {
+            header('Location: UsuarioController.php?acao=formLogin');
+            exit;
+        }
         if (empty($_SESSION['carrinho'])) {
             die("O carrinho está vazio.");
         }
