@@ -64,6 +64,17 @@
             action="UsuarioController.php?acao=cadastrar"
         >
 
+               
+            <input type="hidden"
+                name="csrf_token"
+                value="<?= htmlspecialchars(
+                    $_SESSION['csrf_token'],
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>">
+            
+
+
             <div class="field">
                 <label for="nome">Nome completo</label>
 
