@@ -18,6 +18,22 @@ gtag('config', 'G-Z4V0PZP15H');
     <h1>Compra realizada com sucesso!</h1>
     <p>Obrigado por sua compra!</p>
     <p>Os produtos foram retirados do estoque.</p>
+    <p>
+        Forma de pagamento:
+        <strong>
+            <?= htmlspecialchars(
+                $pagamentoSelecionado,
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
+        </strong>
+    </p>
+
+    <p>
+        Pagamento aprovado por simulação acadêmica.
+        Nenhuma transação financeira foi realizada.
+    </p>
+
 
     <a href="ProdutoController.php?acao=listar">
         Voltar para a loja

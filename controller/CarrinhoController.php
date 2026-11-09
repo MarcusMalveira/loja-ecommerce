@@ -323,6 +323,38 @@ switch ($acao) {
     case 'finalizar':
 
         validarRequisicaoPost();
+        
+        // Validação do método de pagamento simulado
+        $metodosPermitidos = [
+            'pix',
+            'cartao',
+            'carteira_digital'
+        ];
+
+        $metodoPagamento = $_POST['metodo_pagamento'] ?? '';
+
+        if (
+            !is_string($metodoPagamento) ||
+            !in_array(
+                $metodoPagamento,
+                $metodosPermitidos,
+                true
+            )
+        ) {
+            http_response_code(400);
+            exit('Selecione uma forma de pagamento válida.');
+        }
+
+        // Descrição apresentada na confirmação
+        $nomesPagamento = [
+            'pix' => 'Pix',
+            'cartao' => 'Cartão de crédito ou débito',
+            'carteira_digital' => 'Carteira digital'
+        ];
+
+        $pagamentoSelecionado =
+            $nomesPagamento[$metodoPagamento];
+
 
         // Exige autenticação.
         if (!isset($_SESSION['usuario']['id'])) {

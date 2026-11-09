@@ -342,27 +342,87 @@
                     </p>
                     
                       <!-- FINALIZAÇÃO COM AUTENTICAÇÃO -->
-                      <?php if (isset($_SESSION['usuario'])): ?>
+                        <?php if (isset($_SESSION['usuario'])): ?>
 
-                          <form method="POST"
+                            <form method="POST"
                                 action="CarrinhoController.php?acao=finalizar">
 
-                              <!-- PROTEÇÃO CSRF -->
-                              <input type="hidden"
+                                <!-- PROTEÇÃO CSRF -->
+                                <input
+                                    type="hidden"
                                     name="csrf_token"
                                     value="<?= htmlspecialchars(
                                         $_SESSION['csrf_token'],
                                         ENT_QUOTES,
                                         'UTF-8'
-                                    ) ?>">
+                                    ) ?>"
+                                >
 
-                              <button class="full-btn"
-                                      id="finalizar_compra"
-                                      type="submit">
-                                  Finalizar compra →
-                              </button>
+                                <!-- MÉTODOS DE PAGAMENTO -->
+                                <fieldset class="payment-options">
 
-                          </form>
+                                    <legend>
+                                        Escolha a forma de pagamento
+                                    </legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="metodo_pagamento"
+                                            value="pix"
+                                            required
+                                        >
+                                        Pix
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="metodo_pagamento"
+                                            value="cartao"
+                                        >
+                                        Cartão de crédito ou débito
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="metodo_pagamento"
+                                            value="carteira_digital"
+                                        >
+                                        Carteira digital
+                                    </label>
+
+                                </fieldset>
+
+                                <p class="demo-note">
+                                    Pagamento demonstrativo.
+                                    Não informe dados bancários reais.
+                                </p>
+
+                                <button
+                                    class="full-btn"
+                                    id="finalizar_compra"
+                                    type="submit">
+
+                                    Confirmar compra simulada →
+
+                                </button>
+
+                            </form>
+
+                        <?php else: ?>
+
+                            <a
+                                class="full-btn"
+                                href="UsuarioController.php?acao=formLogin">
+
+                                Entrar para finalizar →
+
+                            </a>
+
+                        <?php endif; ?>
+
 
                       <?php else: ?>
 
