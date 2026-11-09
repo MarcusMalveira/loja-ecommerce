@@ -34,6 +34,59 @@ function validarRequisicaoAdmin(): void
 }
 
 
+function validarDadosProduto(bool $edicao = false): array
+{
+    $nome = $_POST['nome'] ?? null;
+    $valor = $_POST['valor'] ?? null;
+    $quantidade = $_POST['quantidade'] ?? null;
+
+    // Nome obrigatório e limitado a 255 caracteres
+    if (!is_string($nome)) {
+        http_response_code(400);
+        exit('Nome do produto inválido.');
+    }
+
+    $nome = trim($nome);
+
+    if ($nome === '' || mb_strlen($nome) > 255) {
+        http_response_code(400);
+        exit('O nome deve ter entre 1 e 255 caracteres.');
+    }
+
+    // Preço não negativo e com até 2 casas decimais
+    if (
+        !is_string($valor) ||
+        !preg_match('/^\d{1,8}(\.\d{1,2})?$/D', $valor)
+    ) {
+        http_response_code(400);
+        exit('Preço inválido. Utilize um valor positivo ou zero, com até 2 casas decimais.');
+    }
+
+    // Quantidade deve ser um número inteiro
+    $quantidadeValidada = filter_var(
+        $quantidade,
+        FILTER_VALIDATE_INT,
+        [
+            'options' => [
+                'min_range' => $edicao ? 0 : 1,
+                'max_range' => 2147483647
+            ]
+        ]
+    );
+
+    if ($quantidadeValidada === false) {
+        http_response_code(400);
+        exit('Quantidade inválida.');
+    }
+
+    return [
+        'nome' => $nome,
+        'valor' => $valor,
+        'quantidade' => $quantidadeValidada
+    ];
+}
+
+
 
 require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
@@ -70,18 +123,17 @@ switch ($acao) {
         require __DIR__ . '/../view/formularioProdutos.php';
         break;
 
+    
     case 'cadastrar':
 
         validarRequisicaoAdmin();
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ProdutoController.php?acao=formulario');
-            exit;
-        }
+
+        $dados = validarDadosProduto();
 
         $produto = new ProdutoDTO();
-        $produto->setNome($_POST['nome']);
-        $produto->setValor($_POST['valor']);
-        $produto->setQuantidade($_POST['quantidade']);
+        $produto->setNome($dados['nome']);
+        $produto->setValor($dados['valor']);
+        $produto->setQuantidade($dados['quantidade']);
 
         $produtoDAO->cadastrarOuSomar($produto);
 
@@ -102,51 +154,70 @@ switch ($acao) {
         require __DIR__ . '/../view/editar.php';
         break;
 
+    
     case 'atualizar':
+
         validarRequisicaoAdmin();
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            die('Requisição inválida');
+
+        $id = filter_input(
+            INPUT_POST,
+            'id',
+            FILTER_VALIDATE_INT
+        );
+
+        if ($id === false || $id === null || $id <= 0) {
+            http_response_code(400);
+            exit('ID do produto inválido.');
         }
 
+        // Confirma se o produto existe
+        if (!$produtoDAO->buscarPorId($id)) {
+            http_response_code(404);
+            exit('Produto não encontrado.');
+        }
+
+        $dados = validarDadosProduto(true);
+
         $produto = new ProdutoDTO();
-        $produto->setId($_POST['id']);
-        $produto->setNome($_POST['nome']);
-        $produto->setValor($_POST['valor']);
-        $produto->setQuantidade($_POST['quantidade']);
+        $produto->setId($id);
+        $produto->setNome($dados['nome']);
+        $produto->setValor($dados['valor']);
+        $produto->setQuantidade($dados['quantidade']);
 
         $produtoDAO->atualizar($produto);
 
         header('Location: ProdutoController.php?acao=listar');
         exit;
 
-    case 'excluir':
+
+    
         
-case 'excluir':
+    case 'excluir':
 
-    // Verifica método POST e token CSRF.
-    validarRequisicaoAdmin();
+        // Verifica método POST e token CSRF.
+        validarRequisicaoAdmin();
 
-    // Valida o ID enviado pelo formulário.
-    $id = filter_input(
-        INPUT_POST,
-        'id',
-        FILTER_VALIDATE_INT
-    );
+        // Valida o ID enviado pelo formulário.
+        $id = filter_input(
+            INPUT_POST,
+            'id',
+            FILTER_VALIDATE_INT
+        );
 
-    if ($id === false || $id === null || $id <= 0) {
-        http_response_code(400);
-        exit('ID do produto inválido.');
-    }
+        if ($id === false || $id === null || $id <= 0) {
+            http_response_code(400);
+            exit('ID do produto inválido.');
+        }
 
-    try {
-        $produtoDAO->excluir($id);
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
-        http_response_code(409);
-        exit('Não foi possível excluir o produto. Verifique se ele está associado a algum carrinho.');
-    }
+        try {
+            $produtoDAO->excluir($id);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            http_response_code(409);
+            exit('Não foi possível excluir o produto. Verifique se ele está associado a algum carrinho.');
+        }
 
-    header('Location: ProdutoController.php?acao=listar');
-    exit;
+        header('Location: ProdutoController.php?acao=listar');
+        exit;
 
 }
