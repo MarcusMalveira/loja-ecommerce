@@ -9,6 +9,31 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+function validarRequisicaoAdmin(): void
+{
+    // Exige o método POST.
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        exit('Método não permitido.');
+    }
+
+    // Recupera os tokens.
+    $tokenEnviado = $_POST['csrf_token'] ?? '';
+    $tokenSessao = $_SESSION['csrf_token'] ?? '';
+
+    // Verifica se ambos existem e são iguais.
+    if (
+        !is_string($tokenEnviado) ||
+        !is_string($tokenSessao) ||
+        $tokenSessao === '' ||
+        !hash_equals($tokenSessao, $tokenEnviado)
+    ) {
+        http_response_code(403);
+        exit('Token CSRF inválido.');
+    }
+}
+
+
 
 require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
@@ -46,6 +71,8 @@ switch ($acao) {
         break;
 
     case 'cadastrar':
+
+        validarRequisicaoAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ProdutoController.php?acao=formulario');
             exit;
@@ -76,6 +103,7 @@ switch ($acao) {
         break;
 
     case 'atualizar':
+        validarRequisicaoAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             die('Requisição inválida');
         }

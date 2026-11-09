@@ -9,6 +9,11 @@
     <h1>Editar Produto</h1>
 
     <form method="POST" action="ProdutoController.php?acao=atualizar">
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
+        >
         <input type="hidden" name="id" value="<?= $produto->getId() ?>">
 
         <label for="nome">Nome:</label>
