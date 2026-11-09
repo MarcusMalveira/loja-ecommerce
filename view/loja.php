@@ -283,7 +283,43 @@ $ehAdmin = ($usuario['tipo'] ?? null) === 'admin';
                                 <?= $produtoEstoque < 1 ? 'disabled' : '' ?>>
                                 Adicionar 🛒
                             </button>
-                        </form>
+                        </form>                        
+                        <?php if ($ehAdmin): ?>
+                            <div class="admin-actions">
+
+                                <a href="ProdutoController.php?acao=editar&id=<?= $produtoId ?>">
+                                    ✏️ Editar
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="ProdutoController.php?acao=excluir"
+                                    onsubmit="return confirm('Deseja realmente excluir este produto?');"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="<?= htmlspecialchars(
+                                            $_SESSION['csrf_token'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value="<?= $produtoId ?>"
+                                    >
+
+                                    <button type="submit">
+                                        🗑️ Excluir
+                                    </button>
+                                </form>
+
+                            </div>
+                        <?php endif; ?>
+
                     </div>
                 </article>
             <?php endforeach; ?>

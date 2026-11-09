@@ -120,16 +120,33 @@ switch ($acao) {
         exit;
 
     case 'excluir':
-        if (!isset($_GET['id'])) {
-            die('ID do produto não encontrado');
-        }
+        
+case 'excluir':
 
-        $produtoDAO->excluir((int) $_GET['id']);
+    // Verifica método POST e token CSRF.
+    validarRequisicaoAdmin();
 
-        header('Location: ProdutoController.php?acao=listar');
-        exit;
+    // Valida o ID enviado pelo formulário.
+    $id = filter_input(
+        INPUT_POST,
+        'id',
+        FILTER_VALIDATE_INT
+    );
 
-    default:
-        echo "Ação inválida.";
-        break;
+    if ($id === false || $id === null || $id <= 0) {
+        http_response_code(400);
+        exit('ID do produto inválido.');
+    }
+
+    try {
+        $produtoDAO->excluir($id);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        http_response_code(409);
+        exit('Não foi possível excluir o produto. Verifique se ele está associado a algum carrinho.');
+    }
+
+    header('Location: ProdutoController.php?acao=listar');
+    exit;
+
 }
