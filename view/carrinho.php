@@ -423,16 +423,6 @@
 
                         <?php endif; ?>
 
-
-                      <?php else: ?>
-
-                          <a class="full-btn"
-                            href="UsuarioController.php?acao=formLogin">
-                              Entrar para finalizar →
-                          </a>
-
-                      <?php endif; ?>
-
                     <!-- LIMPAR CARRINHO -->
                     <form method="POST"
                           action="CarrinhoController.php?acao=limpar">
