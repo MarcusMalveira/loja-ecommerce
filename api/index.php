@@ -1,4 +1,3 @@
-
 <?php
 
 // Roteador da aplicação na Vercel
