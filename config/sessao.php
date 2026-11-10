@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/erros.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
 
     // Na Vercel, a aplicação utiliza HTTPS.
