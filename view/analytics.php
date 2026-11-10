@@ -81,7 +81,7 @@
         var info = document.createElement('p');
         info.textContent = 'A TechLoja usa um cookie necessário para manter a sessão. Com sua autorização, também utiliza Google Analytics 4 para medir visitas e compras simuladas. Recusar não afeta o funcionamento da loja. ';
         var link = document.createElement('a');
-        link.href = <?= json_encode(str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/') ? '../privacidade.php' : 'privacidade.php') ?>;
+        link.href = <?= json_encode(getenv('VERCEL') === '1' ? '/privacidade.php' : '../privacidade.php') ?>;
         link.textContent = 'Política de privacidade';
         info.appendChild(link);
         var actions = document.createElement('div');

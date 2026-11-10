@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Privacidade e cookies | TechLoja</title>
-    <link rel="stylesheet" href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/api/') ? '/style.css' : 'public/style.css' ?>">
+    <link rel="stylesheet" href="<?= getenv('VERCEL') === '1' ? '/style.css' : 'public/style.css' ?>">
     <?php require __DIR__ . '/analytics.php'; ?>
 </head>
 <body>
 <header class="topbar"><nav class="nav" aria-label="Navegação principal">
-    <a class="brand" href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/api/') ? 'ProdutoController.php?acao=listar' : 'controller/ProdutoController.php?acao=listar' ?>">Tech<span>Loja</span></a>
+    <a class="brand" href="<?= getenv('VERCEL') === '1' ? '/ProdutoController.php?acao=listar' : 'controller/ProdutoController.php?acao=listar' ?>">Tech<span>Loja</span></a>
 </nav></header>
 <main class="container inner-page">
     <section class="form-panel" style="max-width:850px;margin:0 auto">

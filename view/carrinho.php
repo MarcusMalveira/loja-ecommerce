@@ -8,9 +8,8 @@
     <title>Meu carrinho | TechLoja</title>
 
     <link rel="stylesheet"
-          href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/')
-              ? '../public/style.css'
-              : '/style.css' ?>">
+          href="<?= getenv('VERCEL') === '1'
+              ? '/style.css' : '../public/style.css' ?>">
     <?php require __DIR__ . '/analytics.php'; ?>
 </head>
 

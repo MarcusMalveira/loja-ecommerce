@@ -24,9 +24,8 @@ $ehAdmin = ($usuario['tipo'] ?? null) === 'admin';
     <title>TechLoja | Produtos</title>
     <link
         rel="stylesheet"
-        href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/')
-            ? '../public/style.css'
-            : '/style.css' ?>"
+        href="<?= getenv('VERCEL') === '1'
+            ? '/style.css' : '../public/style.css' ?>"
     >
     <?php require __DIR__ . '/analytics.php'; ?>
 </head>
@@ -316,7 +315,7 @@ $ehAdmin = ($usuario['tipo'] ?? null) === 'admin';
         <p class="footer">
             TechLoja • Projeto acadêmico demonstrativo •
             Nenhuma compra real é processada
-            • <a href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/') ? '../privacidade.php' : 'privacidade.php' ?>">Privacidade e cookies</a>
+            • <a href="<?= getenv('VERCEL') === '1' ? '/privacidade.php' : '../privacidade.php' ?>">Privacidade e cookies</a>
         </p>
     </main>
 </body>
