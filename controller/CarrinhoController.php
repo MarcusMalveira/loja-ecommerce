@@ -376,8 +376,10 @@ switch ($acao) {
                 $_SESSION['carrinho']
             );
 
-            // Executa a compra e atualiza o estoque.
-            $produtoDAO->finalizarCompra($itensCompra);
+            $produtoDAO->finalizarCompra(
+            $itensCompra,
+            (int) $_SESSION['usuario']['id']
+                );
 
             // Monta os dados do evento GA4.
             $ga4Compra = [
@@ -411,11 +413,6 @@ switch ($acao) {
                     $itensCompra
                 )
             ];
-
-            // Remove os produtos salvos após a compra.
-            $carrinhoDAO->limparPorUsuario(
-                (int) $_SESSION['usuario']['id']
-            );
 
             $_SESSION['carrinho'] = [];
 

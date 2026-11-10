@@ -109,42 +109,83 @@ class ProdutoDAO
         $stmt->execute([$id]);
     }
 
-    public function finalizarCompra($carrinho)
-    {
-        $this->pdo->beginTransaction();
+    
+public function finalizarCompra(array $carrinho, int $usuarioId): void
+{
+    if ($usuarioId <= 0 || empty($carrinho)) {
+        throw new InvalidArgumentException(
+            'Usuário ou carrinho inválido.'
+        );
+    }
 
-        try {
-            foreach ($carrinho as $item) {
-                $id = $item['id'];
-                $quantidade = $item['quantidade'];
+    $this->pdo->beginTransaction();
 
-                $stmt = $this->pdo->prepare("SELECT quantidade FROM produto WHERE id = ? FOR UPDATE");
-                $stmt->execute([$id]);
-                $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+    try {
+        // Bloqueia os produtos e atualiza o estoque.
+        foreach ($carrinho as $item) {
+            $id = (int) ($item['id'] ?? 0);
+            $quantidade = (int) ($item['quantidade'] ?? 0);
 
-                if (!$produto) {
-                    throw new Exception("Produto com ID $id não encontrado.");
-                }
-
-                $novaQuantidade = $produto['quantidade'] - $quantidade;
-
-                if ($novaQuantidade < 0) {
-                    throw new Exception("Estoque insuficiente para o produto ID $id.");
-                }
-
-                if ($novaQuantidade == 0) {
-                    $stmt = $this->pdo->prepare("DELETE FROM produto WHERE id = ?");
-                    $stmt->execute([$id]);
-                } else {
-                    $stmt = $this->pdo->prepare("UPDATE produto SET quantidade = ? WHERE id = ?");
-                    $stmt->execute([$novaQuantidade, $id]);
-                }
+            if ($id <= 0 || $quantidade <= 0) {
+                throw new InvalidArgumentException(
+                    'Item do carrinho inválido.'
+                );
             }
 
-            $this->pdo->commit();
-        } catch (Exception $e) {
-            $this->pdo->rollBack();
-            throw $e;
+            $stmt = $this->pdo->prepare(
+                "SELECT quantidade
+                 FROM produto
+                 WHERE id = ?
+                 FOR UPDATE"
+            );
+
+            $stmt->execute([$id]);
+            $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$produto) {
+                throw new RuntimeException(
+                    "Produto com ID $id não encontrado."
+                );
+            }
+
+            if ($quantidade > (int) $produto['quantidade']) {
+                throw new RuntimeException(
+                    "Estoque insuficiente para o produto ID $id."
+                );
+            }
+
+            $novaQuantidade =
+                (int) $produto['quantidade'] - $quantidade;
+
+            $stmt = $this->pdo->prepare(
+                "UPDATE produto
+                 SET quantidade = ?
+                 WHERE id = ?"
+            );
+
+            $stmt->execute([$novaQuantidade, $id]);
         }
+
+        // Limpa o carrinho persistido na MESMA transação.
+        $stmt = $this->pdo->prepare(
+            "DELETE FROM carrinho_item
+             WHERE usuario_id = ?"
+        );
+
+        $stmt->execute([$usuarioId]);
+
+        // Confirma as duas operações juntas.
+        $this->pdo->commit();
+
+    } catch (Throwable $e) {
+
+        // Desfaz as alterações do banco em caso de falha.
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+
+        throw $e;
     }
+}
+
 }
