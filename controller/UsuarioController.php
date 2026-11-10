@@ -1,8 +1,6 @@
 <?php
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+require_once __DIR__ . '/../config/sessao.php';
 
 require_once __DIR__ . '/../model/dao/CarrinhoDAO.php';
 require_once __DIR__ . '/../model/dao/ProdutoDAO.php';
