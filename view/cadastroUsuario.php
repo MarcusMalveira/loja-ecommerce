@@ -118,6 +118,8 @@
                 </small>
             </div>
 
+            <p style="font-size:0.88rem">Ao criar sua conta, seus dados serão usados para autenticação e testes acadêmicos. Saiba mais na <a href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/') ? '../privacidade.php' : 'privacidade.php' ?>">política de privacidade</a>.</p>
+
             <div class="form-actions">
 
                 <a

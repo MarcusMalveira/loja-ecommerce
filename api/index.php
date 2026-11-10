@@ -28,6 +28,10 @@ switch ($rota) {
             '/../controller/UsuarioController.php';
         break;
 
+    case 'privacidade.php':
+        require __DIR__ . '/../view/privacidade.php';
+        break;
+
     default:
         http_response_code(404);
         echo 'Página não encontrada.';

@@ -14,22 +14,7 @@
               $_SERVER['SCRIPT_NAME'] ?? '',
               '/controller/'
           ) ? '../public/style.css' : '/style.css' ?>">
-
-    <!-- Google Analytics 4 -->
-    <script async
-        src="https://www.googletagmanager.com/gtag/js?id=G-Z4V0PZP15H">
-    </script>
-
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-        gtag('config', 'G-Z4V0PZP15H');
-    </script>
+    <?php require __DIR__ . '/analytics.php'; ?>
 </head>
 
 <body>

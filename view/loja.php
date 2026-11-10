@@ -28,19 +28,7 @@ $ehAdmin = ($usuario['tipo'] ?? null) === 'admin';
             ? '../public/style.css'
             : '/style.css' ?>"
     >
-    <!-- Google Analytics 4 -->
-    <script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-Z4V0PZP15H">
-    </script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'G-Z4V0PZP15H');
-    </script>
+    <?php require __DIR__ . '/analytics.php'; ?>
 </head>
 <body>
     <!-- CABEÇALHO -->
@@ -328,6 +316,7 @@ $ehAdmin = ($usuario['tipo'] ?? null) === 'admin';
         <p class="footer">
             TechLoja • Projeto acadêmico demonstrativo •
             Nenhuma compra real é processada
+            • <a href="<?= str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/controller/') ? '../privacidade.php' : 'privacidade.php' ?>">Privacidade e cookies</a>
         </p>
     </main>
 </body>
