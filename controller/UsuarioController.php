@@ -199,8 +199,10 @@ switch ($acao) {
                     'tipo' => $usuario['tipo']
                 ];
 
-                // Restaura o carrinho vinculado à conta.
                 $_SESSION['carrinho'] = $carrinhoAtualizado;
+
+                // Grava as alterações da sessão antes de redirecionar.
+                session_write_close();
 
                 header('Location: ProdutoController.php?acao=listar');
                 exit;
