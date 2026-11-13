@@ -22,6 +22,15 @@ function validarCsrf(): void {
 
     if (!is_string($recebido) ||
         !hash_equals($_SESSION['csrf_token'], $recebido)) {
+        error_log(
+            'TechLoja CSRF login: ' .
+            'cookie_presente=' .
+            (isset($_COOKIE[session_name()]) ? 'sim' : 'nao') .
+            ', token_enviado=' .
+            (is_string($recebido) && $recebido !== '' ? 'sim' : 'nao') .
+            ', token_sessao=' .
+            (!empty($_SESSION['csrf_token']) ? 'sim' : 'nao')
+        );    
         http_response_code(403);
         exit('Requisição inválida. Atualize a página.');
     }
@@ -34,8 +43,12 @@ switch ($acao) {
         break;
 
     case 'formLogin':
-        require __DIR__ . '/../view/login.php';
-        break;
+    // Evita reutilizar um formulário com token CSRF antigo.
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+
+    require __DIR__ . '/../view/login.php';
+    break;
 
     case 'cadastrar':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -89,9 +102,9 @@ switch ($acao) {
         $senha = $_POST['senha'] ?? '';
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)
-            || !is_string($senha)) {
-            http_response_code(400);
-            exit('Credenciais inválidas.');
+        || !is_string($senha)) {
+        header('Location: UsuarioController.php?acao=formLogin&erro=credenciais');
+        exit;
         }
 
         try {
@@ -103,9 +116,11 @@ switch ($acao) {
         }
 
         if (!$usuario ||
-            !password_verify($senha, $usuario['senha_hash'])) {
-            http_response_code(401);
-            exit('E-mail ou senha incorretos.');
+        !password_verify($senha, $usuario['senha_hash'])) {
+
+        // Redireciona para o formulário com um aviso de erro.
+        header('Location: UsuarioController.php?acao=formLogin&erro=credenciais');
+        exit;
         }
         // Preserva os produtos adicionados antes do login.
                 $carrinhoVisitante = $_SESSION['carrinho'] ?? [];

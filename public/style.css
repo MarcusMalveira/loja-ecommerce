@@ -853,3 +853,31 @@ body .tl-cookie-reject:hover { background: var(--accent-soft); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }
 }
+
+
+/* Aviso de erro no formulário de login */
+.login-alert {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    padding: 14px 16px;
+    margin-bottom: 20px;
+
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #dc2626;
+    border-radius: 8px;
+
+    color: #991b1b;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.login-alert strong {
+    font-weight: 700;
+}
+
+.login-alert span {
+    font-weight: 400;
+}

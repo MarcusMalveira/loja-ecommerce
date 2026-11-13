@@ -37,6 +37,12 @@
     </div>
 
     <div class="form-panel">
+        <?php if (($_GET['erro'] ?? '') === 'credenciais'): ?>
+        <div class="login-alert" role="alert">
+            <strong>Não foi possível entrar.</strong>
+            <span>E-mail ou senha incorretos. Tente novamente.</span>
+        </div>
+        <?php endif; ?>
         <form class="product-form"
               method="POST"
               action="UsuarioController.php?acao=login">
